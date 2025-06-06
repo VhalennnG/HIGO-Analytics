@@ -30,28 +30,18 @@ exports.getCustomers = async (req, res) => {
     const sortObj = {};
     sortObj[validSortBy] = validSortOrder === "asc" ? 1 : -1;
 
-    // const queryPromise = Promise.all([
-    //   Customer.find()
-    //     .skip(skip)
-    //     .limit(perPage + 1)
-    //     .sort(sortObj)
-    //     .lean(),
-    //   Customer.countDocuments(),
-    // ]);
-
-    // const [customers, totalCount] = await Promise.race([
-    //   queryPromise,
-    //   timeoutPromise,
-    // ]);
-
-    // Karena memakai free web server jadi timeout nya tidak bisa saya gunakan
-    const [customers, totalCount] = await Promise.all([
+    const queryPromise = Promise.all([
       Customer.find()
         .skip(skip)
         .limit(perPage + 1)
         .sort(sortObj)
         .lean(),
       Customer.countDocuments(),
+    ]);
+
+    const [customers, totalCount] = await Promise.race([
+      queryPromise,
+      timeoutPromise,
     ]);
 
     const totalPages = Math.ceil(totalCount / perPage);
@@ -91,9 +81,7 @@ exports.getCustomerCount = async (req, res) => {
 
     const countPromise = Customer.countDocuments();
 
-    // Karena memakai free web server jadi timeout nya tidak bisa saya gunakan
-    // const count = await Promise.race([countPromise, timeoutPromise]);
-    const count = await Customer.countDocuments();
+    const count = await Promise.race([countPromise, timeoutPromise]);
 
     res.json({
       count,

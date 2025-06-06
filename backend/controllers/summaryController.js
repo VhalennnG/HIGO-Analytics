@@ -2,11 +2,11 @@ const Customer = require("../models/Customer");
 
 exports.getSummary = async (req, res) => {
   try {
-    // const timeoutPromise = new Promise((_, reject) => {
-    //   setTimeout(() => {
-    //     reject(new Error("Request timeout: Processing took too long"));
-    //   }, 30000);
-    // });
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => {
+        reject(new Error("Request timeout: Processing took too long"));
+      }, 30000);
+    });
 
     // First get total count for percentage calculations
     const totalCustomers = await Customer.countDocuments();
