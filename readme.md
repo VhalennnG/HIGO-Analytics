@@ -33,7 +33,6 @@ graph TD
 
 ## Project Structure
 
-Here's the annotated project structure with explanations for each item:
 
 ```
 HiGO-Analytics/                     # Root project folder
@@ -62,30 +61,29 @@ HiGO-Analytics/                     # Root project folder
     └── tailwind.config.js          # Tailwind CSS configuration
 ```
 
-Here's the updated deployment section with comprehensive instructions for both development and production:
-
 ## Development & Deployment
 
-### Backend Setup (Node.js/Express)
+### MongoDB Atlas Setup
 
-```bash
-# 1. Install dependencies
-cd backend
-npm install
+1. **Allow All IPs (Temporary)**
+   - Go to MongoDB Atlas → Security → Network Access
+   - Click "Add IP Address"
+   - Enter `0.0.0.0/0` (allow all IPs)
+   - Click "Confirm"
 
-# 2. Set up environment variables
-echo "MONGO=your_mongodb_connection_string" > .env
-echo "PORT=5000" >> .env
+2. **Connection String**
+   ```env
+   MONGO=mongodb+srv://<username>:<password>@cluster0.example.mongodb.net/yourdb?retryWrites=true&w=majority
+   ```
 
-# 3. Import initial data (optional)
-npm run import  # Imports from Customer.csv (If you want to run this make sure you have Dataset.csv on data folder)
+3. **After Deployment**
+   - Restrict IPs to only Render's IP ranges
+   - Enable "Database Access" with proper user privileges
 
-# 4. Run in development mode
-npm run dev     # Uses nodemon for live reload
-
-# 5. For production
-npm install --production
-npm start       # Uses node server.js
+#### Important Security Note
+```diff
+- Remember to remove 0.0.0.0/0 after testing and replace with Render's specific IP ranges
++ Make sure you've added the 0.0.0/0 IP address to allow Render to connect during initial deployment
 ```
 
 ### Frontend Setup (Next.js)
